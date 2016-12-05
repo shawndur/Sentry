@@ -2,11 +2,12 @@
 #include <iostream>
 #include <cstdlib>
 #include <wiringPi.h>
+#include <string>
 
 using namespace std;
 
 int Sentry::setup(){
-  int distance;
+  //int distance;
   string alarm;
   string distance;
 
@@ -22,7 +23,7 @@ int Sentry::setup(){
   delay(10000);
   cout<<"Armed"<<endl;
 
-  return stoi(distance);;
+  return stoi(distance);
 }
 
 void Sentry::objectDetected(int distance){
