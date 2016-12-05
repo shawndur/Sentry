@@ -28,7 +28,7 @@ private:
   void scanThread();
   static void * launcher(void * arg);
 public:
-  Scanner (Ultrasonic & sensor, Servo & servo, ScannerEvent & handler, int detectRange);
+  Scanner (Ultrasonic & sensor, Servo & servo, ScannerEvent & handler, int detectRange, int precision);
   pthread_t * run(bool * run);
 };
 
