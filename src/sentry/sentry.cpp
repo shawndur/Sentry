@@ -1,7 +1,7 @@
 #include "../include/sentry.h"
 #include <iostream>
 #include <cstdlib>
-//#include <wiringPi.h>
+#include <wiringPi.h>
 
 using namespace std;
 
