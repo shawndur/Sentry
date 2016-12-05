@@ -12,12 +12,12 @@ int Sentry::setup(){
   cout<<"Enter a Distance: ";
   cin>>distance;
   cout<<"Set Alarm? (y/n): ";
-  cin>>alarm;
+  getline(cin,alarm);
   _alarm = alarm == "y";
-  cout<<"Email (Leave Blank for No Email): ";
+  cout<<"\nEmail (Leave Blank for No Email): ";
   getline(cin,_email);
 
-  cout<<"Arming in 10 seconds"<<endl;
+  cout<<"\nArming in 10 seconds"<<endl;
   delay(10000);
   cout<<"Armed"<<endl;
 

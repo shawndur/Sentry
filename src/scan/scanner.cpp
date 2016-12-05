@@ -12,7 +12,7 @@ void Scanner::scanThread(){
   scanRange(objects,_scanPrecision);
   while(*_run){
     for(int object : objects){
-      if(object <= _detectRange) _handler.objectDetected(object);
+      if(object <= _detectRange && object>-1) _handler.objectDetected(object);
     }
     objects.clear();
     scanRange(objects,_scanPrecision);
