@@ -38,7 +38,7 @@
 
 using namespace std;
 
-Position::Position(PositionEvent & handler):_handler(handler),_maxMovement(maxMovement){}
+Position::Position(PositionEvent & handler,int maxMovement):_handler(handler),_maxMovement(maxMovement){}
 
 
 void Position::positionThread(){
