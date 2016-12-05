@@ -1,6 +1,7 @@
 #include "../include/sentry.h"
 #include <iostream>
-#include <wiringPi.h>
+#include <cstdlib>
+//#include <wiringPi.h>
 
 using namespace std;
 
@@ -14,7 +15,7 @@ int Sentry::setup(){
   cin>>alarm;
   _alarm = alarm == "y";
   cout<<"Email (Leave Blank for No Email): ";
-  cin>>_email;
+  getline(cin,_email);
 
   cout<<"Arming in 10 seconds"<<endl;
   delay(10000);
@@ -24,19 +25,27 @@ int Sentry::setup(){
 }
 
 void Sentry::objectDetected(int distance){
-  if(_alarm) alarm();
+  cout<<"An Object Has Been Detected Within " + to_string(distance)+" Inches"<<endl;
   if(_email.size()>0) sendEmail("An Object Has Been Detected Within " + to_string(distance)+" Inches");
+  if(_alarm) alarm();
+  delay(300000);
 }
 
 void Sentry::deviceMoved(){
-  if(_alarm) alarm();
+  cout<<"The Device Has Been Moved"<<endl;
   if(_email.size()>0) sendEmail("The Device Has Been Moved");
+  if(_alarm) alarm();
+  delay(300000);
 }
 
 void Sentry::alarm(){
-  cout<<"alarm"<<endl;
+  for(int i=0;i<4;++i){
+    cout << '\a';
+    delay(250);
+  }
 }
 
 void Sentry::sendEmail(std::string message){
-  cout<<"email"<<endl;
+  string command = "echo \""+ message +"\" | mail -s \"Sentry Bot Event\" " + _email;
+  system(command.c_str());
 }
