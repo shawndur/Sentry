@@ -8,9 +8,10 @@ using namespace std;
 int Sentry::setup(){
   int distance;
   string alarm;
+  string distance;
 
   cout<<"Enter a Distance: ";
-  cin>>distance;
+  getline(cin,distance);
   cout<<"Set Alarm? (y/n): ";
   getline(cin,alarm);
   _alarm = alarm == "y";
@@ -21,7 +22,7 @@ int Sentry::setup(){
   delay(10000);
   cout<<"Armed"<<endl;
 
-  return distance;
+  return stoi(distance);;
 }
 
 void Sentry::objectDetected(int distance){
