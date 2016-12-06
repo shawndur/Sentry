@@ -5,8 +5,8 @@ class Servo{
   const int HW_PWM_PIN = 18;
   const int CLOCK = 192;
   const int RANGE = 2000;
-  const double PULSE_PER_DEG = ((double)-37)/((double)36);
-  const double OFFSET = ((double)315)/((double)2);
+  const double PULSE_PER_DEG = -1;//((double)-37)/((double)36);
+  const double OFFSET = 150;//((double)315)/((double)2);
   bool _hwPwm;
   int _pin;
   Servo();

@@ -44,7 +44,7 @@ std::vector<int> & Scanner::scanRange(std::vector<int> & v, int start, int end, 
 
 int Scanner::scan(int deg){
   _servo.setPos(deg);
-  delay(_servo.MS_PER_DEG+1);
+  delay(250);
   _ping.DistanceMeasure();
   return _ping.microsecondsToInches();
 }
