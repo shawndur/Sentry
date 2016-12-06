@@ -41,10 +41,7 @@ void Sentry::deviceMoved(){
 }
 
 void Sentry::alarm(){
-  for(int i=0;i<4;++i){
-    cout << '\a';
-    delay(250);
-  }
+  system("beep -f1000 -I5000 &");
 }
 
 void Sentry::sendEmail(std::string message){
