@@ -30,14 +30,14 @@ void Sentry::objectDetected(int distance){
   cout<<"An Object Has Been Detected Within " + to_string(distance)+" Inches"<<endl;
   if(_email.size()>0) sendEmail("An Object Has Been Detected Within " + to_string(distance)+" Inches");
   if(_alarm) alarm();
-  delay(300000);
+  //delay(300000);
 }
 
 void Sentry::deviceMoved(){
   cout<<"The Device Has Been Moved"<<endl;
   if(_email.size()>0) sendEmail("The Device Has Been Moved");
   if(_alarm) alarm();
-  delay(300000);
+  //delay(300000);
 }
 
 void Sentry::alarm(){
