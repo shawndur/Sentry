@@ -3,8 +3,13 @@
 #include <cstdlib>
 #include <wiringPi.h>
 #include <string>
+#include <fstream>
 
 using namespace std;
+
+Sentry::Sentry(){
+  _lastEmail = 0;
+}
 
 int Sentry::setup(){
   //int distance;
@@ -16,6 +21,26 @@ int Sentry::setup(){
   cout<<"Set Alarm? (y/n): ";
   getline(cin,alarm);
   _alarm = alarm == "y";
+
+  if(_alarm){
+    fstream file ("sentry_alarm.py",ios::out | ios::app | ios::trunc);
+    file << "#!/usr/bin/python\n";
+    file << "from sense_hat import SenseHat\n";
+    file << "from time import sleep\n";
+    file << "sense = SenseHat()\n";
+    file << "red = (255, 0, 0)\n";
+    file << "blue = (0,0,255)\n";
+    file << "i=5\n";
+    file << "while(i>0):\n";
+    file << "\tsense.clear(red)\n";
+    file << "\tsleep(.25)\n";
+    file << "\tsense.clear(blue)\n";
+    file << "\tsleep(.25)\n";
+    file << "\ti = i+1\n";
+    file << "sense.clear()\n";;
+    file.close();
+  }
+
   cout<<"\nEmail (Leave Blank for No Email): ";
   getline(cin,_email);
 
@@ -41,10 +66,15 @@ void Sentry::deviceMoved(){
 }
 
 void Sentry::alarm(){
-  system("beep -f1000 -I5000 &");
+  system("speaker-test -f500 -tsine -P2 -l1 &");
+  system("python ./sentry_alarm.py &");
 }
 
 void Sentry::sendEmail(std::string message){
-  string command = "echo \""+ message +"\" | mail -s \"Sentry Bot Event\" " + _email;
-  system(command.c_str());
+  unsigned int curr = millis();
+  if(curr - _lastEmail > 300000 || _lastEmail == 0){
+    string command = "echo \""+ message +"\" | mail -s \"Sentry Bot Event\" " + _email;
+    system(command.c_str());
+  }
+  _lastEmail = curr;
 }

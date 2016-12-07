@@ -8,10 +8,12 @@
 class Sentry : public Scanner::ScannerEvent, public Position::PositionEvent{
   std::string _email;
   bool _alarm;
+  unsigned int _lastEmail;
 
   void alarm();
   void sendEmail(std::string message);
 public:
+  Sentry();
   void objectDetected(int distance);
   void deviceMoved();
   int setup();
