@@ -34,7 +34,7 @@
 #include <cmath>
 //#include <Python.h>
 
-#define MAX_MOVEMENT 1
+#define MAX_MOVEMENT 2
 
 using namespace std;
 
@@ -103,10 +103,8 @@ void Position::positionThread(){
         RTFLOAT tx = vec.x() * RTMATH_RAD_TO_DEGREE;
         RTFLOAT ty = vec.y() * RTMATH_RAD_TO_DEGREE;
         RTFLOAT tz = vec.z() * RTMATH_RAD_TO_DEGREE;
-        if(!firstRun){
-          if(max(abs(x-tx),max(abs(y-ty),abs(z-tz))) > _maxMovement){
-            _handler.deviceMoved();
-          }
+        if(!firstRun && max(abs(x-tx),max(abs(y-ty),abs(z-tz))) > _maxMovement){
+          _handler.deviceMoved();
         }
         x = tx;
         y = ty;

@@ -6,6 +6,7 @@
 #include <csignal>
 #include <wiringPi.h>
 #include <sstream>
+#include <iostream>
 
 #define MAX_MOVEMENT 2
 #define PING_PIN 22

@@ -4,11 +4,15 @@
 #include <wiringPi.h>
 #include <string>
 #include <fstream>
+#include <unistd.h>
 
 using namespace std;
 
 Sentry::Sentry(){
   _lastEmail = 0;
+}
+Sentry::~Sentry(){
+  close(_fd[1]);
 }
 
 int Sentry::setup(){
@@ -23,27 +27,38 @@ int Sentry::setup(){
   _alarm = alarm == "y";
 
   if(_alarm){
-    fstream file ("sentry_alarm.py",ios::out | ios::app | ios::trunc);
+    fstream file ("/tmp/sentry_alarm.py",ios::out | ios::in| ios::trunc);
     file << "#!/usr/bin/python\n";
+    file << "import sys, os\n";
+    file << "triggerFd = int(sys.argv[1])\n";
     file << "from sense_hat import SenseHat\n";
     file << "from time import sleep\n";
     file << "sense = SenseHat()\n";
     file << "red = (255, 0, 0)\n";
     file << "blue = (0,0,255)\n";
-    file << "i=5\n";
-    file << "while(i>0):\n";
-    file << "\tsense.clear(red)\n";
-    file << "\tsleep(.25)\n";
-    file << "\tsense.clear(blue)\n";
-    file << "\tsleep(.25)\n";
-    file << "\ti = i+1\n";
-    file << "sense.clear()\n";;
+    file << "def alarm():\n";
+    file << "\ti = 5\n";
+    file << "\twhile(i>0):\n";
+    file << "\t\tsense.clear(red)\n";
+    file << "\t\tsleep(.25)\n";
+    file << "\t\tsense.clear(blue)\n";
+    file << "\t\tsleep(.25)\n";
+    file << "\t\ti = i-1\n";
+    file << "\tsense.clear()\n";
+    file << "result = 0\n";
+    file << "while(os.read(triggerFd,1) != \"\"):\n";
+    file << "\talarm()\n";
+    file << "os.close(triggerFd)\n";
     file.close();
+    pipe(_fd);
+    string command = "python /tmp/sentry_alarm.py "+ std::to_string(_fd[0]) +" & > /dev/null &";
+    system(command.c_str());
   }
+  system("chmod 777 /tmp/sentry_alarm.py");
 
   cout<<"\nEmail (Leave Blank for No Email): ";
   getline(cin,_email);
-
+  cout<<_email<<endl;
   cout<<"\nArming in 10 seconds"<<endl;
   delay(10000);
   cout<<"Armed"<<endl;
@@ -66,15 +81,19 @@ void Sentry::deviceMoved(){
 }
 
 void Sentry::alarm(){
-  system("speaker-test -f500 -tsine -P2 -l1 &");
-  system("python ./sentry_alarm.py &");
+  char buff = 'a'; 
+  write(_fd[1],&buff,sizeof(char));
+  system("speaker-test -f500 -tsine -P2 -l1 > /dev/null");
+  //system("python /tmp/sentry_alarm.py > /dev/null");
+  /*char buff = 'a';
+  write(_fd[1],&buff,sizeof(char));*/
 }
 
 void Sentry::sendEmail(std::string message){
-  unsigned int curr = millis();
-  if(curr - _lastEmail > 300000 || _lastEmail == 0){
+ // unsigned int curr = millis();
+ // if(curr - _lastEmail > 300000 || _lastEmail == 0){
     string command = "echo \""+ message +"\" | mail -s \"Sentry Bot Event\" " + _email;
     system(command.c_str());
-  }
-  _lastEmail = curr;
+ // }
+ // _lastEmail = curr;
 }
